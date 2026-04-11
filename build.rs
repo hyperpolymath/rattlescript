@@ -6,9 +6,11 @@
 //! Checks, in order:
 //! 1. `AFFINESCRIPT` env var (explicit override)
 //! 2. `affinescript` on PATH (standard install)
-//! 3. Sibling build output `../../_build/default/bin/main.exe` (monorepo dev)
+//! 3. `affinescript/_build/default/bin/main.exe` (standalone repo, submodule built)
+//! 4. `../../_build/default/bin/main.exe` (monorepo dev, distributions/rattlescript/)
 //!
 //! The resolved path is baked in as the `AFFINESCRIPT_BIN` compile-time env.
+//! Run `just setup` to build affinescript from the submodule before `cargo build`.
 
 use std::env;
 use std::path::Path;
@@ -16,25 +18,35 @@ use std::path::Path;
 fn main() {
     println!("cargo:rerun-if-env-changed=AFFINESCRIPT");
 
+    let manifest = env::var("CARGO_MANIFEST_DIR").unwrap();
+
     let bin = if let Ok(p) = env::var("AFFINESCRIPT") {
         p
     } else if which_affinescript() {
         "affinescript".to_string()
     } else {
-        // Monorepo dev path: distributions/rattlescript/ → ../../_build/...
-        let manifest = env::var("CARGO_MANIFEST_DIR").unwrap();
-        let dev_path = Path::new(&manifest)
-            .join("../../_build/default/bin/main.exe")
+        // Standalone repo: submodule built with `just setup`
+        let standalone_path = Path::new(&manifest)
+            .join("affinescript/_build/default/bin/main.exe")
             .canonicalize()
             .ok()
             .map(|p| p.to_string_lossy().into_owned());
 
-        match dev_path {
-            Some(p) => p,
-            None => {
+        if let Some(p) = standalone_path {
+            p
+        } else {
+            // Monorepo dev: distributions/rattlescript/ → ../../_build/...
+            let monorepo_path = Path::new(&manifest)
+                .join("../../_build/default/bin/main.exe")
+                .canonicalize()
+                .ok()
+                .map(|p| p.to_string_lossy().into_owned());
+
+            monorepo_path.unwrap_or_else(|| {
                 // Fall back to the name — will fail at runtime with a clear message.
+                // Run `just setup` to build affinescript first.
                 "affinescript".to_string()
-            }
+            })
         }
     };
 

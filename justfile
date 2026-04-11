@@ -1,14 +1,26 @@
 # SPDX-License-Identifier: PMPL-1.0-or-later
 # SPDX-FileCopyrightText: 2024-2026 Jonathan D.A. Jewell (hyperpolymath)
 
-# RattleScript distribution justfile.
-# Most work lives in the parent affinescript justfile.
-# This file handles the thin Rust wrapper binary only.
+# RattleScript justfile.
+# First-time setup: `just setup` builds affinescript from the submodule,
+# then `just build` builds the rattle wrapper binary.
 
 default:
     just --list
 
-# Build the rattle binary (dev mode, uses sibling _build/)
+# First-time setup: init submodule and build affinescript
+setup:
+    git submodule update --init --recursive
+    cd affinescript && dune build
+
+# Update affinescript submodule to latest and rebuild
+update-affinescript:
+    git submodule update --remote affinescript
+    cd affinescript && dune build
+    git add affinescript
+    git commit -m "chore(affinescript): advance pointer to latest release"
+
+# Build the rattle binary (dev mode)
 build:
     cargo build
 
@@ -16,11 +28,14 @@ build:
 release:
     cargo build --release
 
-# Run the example
+# First-time: setup then build
+bootstrap: setup build
+
+# Run the hello example
 run-hello:
     cargo run -- eval examples/hello.rattle
 
-# Check example typechecks
+# Type-check the hello example
 check-hello:
     cargo run -- check examples/hello.rattle
 
@@ -28,19 +43,11 @@ check-hello:
 preview-hello:
     cargo run -- preview-python-transform examples/hello.rattle
 
-# Run all examples
+# Type-check all examples
 check-examples:
     cargo run -- check examples/hello.rattle
     cargo run -- check examples/ownership.rattle
 
 # Install rattle binary to ~/.cargo/bin
-install:
+install: setup
     cargo install --path .
-
-# Bump AffineScript submodule pointer (called by CI after affinescript releases)
-update-affinescript:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    git -C ../.. submodule update --remote
-    git add ../..
-    git commit -m "chore(affinescript): advance pointer to latest release"
