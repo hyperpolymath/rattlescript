@@ -1,175 +1,99 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
-// SPDX-FileCopyrightText: 2024-2026 Jonathan D.A. Jewell (hyperpolymath)
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2024-2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 = RattleScript
-:toc:
-:toc-placement: preamble
+:toc: preamble
+:icons: font
 
-Python-syntax AffineScript.
-Write code that looks like Python.
-Get affine resource guarantees and typed WASM out.
-
-**Status: alpha** — the syntax, type checker, and WASM output are solid.
-Effects runtime is in progress upstream.
-
----
+Python-syntax AffineScript. Write code that looks like Python, get affine resource guarantees and typed-wasm output.
 
 == What it is
 
-RattleScript is https://github.com/hyperpolymath/affinescript[AffineScript]
-with its Python face pre-selected.  If you write Python, you already know
-most of the syntax.
+RattleScript is link:https://github.com/hyperpolymath/affinescript[AffineScript] with its `rattle` face pre-selected. If you write Python, you already know most of the syntax. The compiler checks that your resources (files, sockets, tokens, handles) are used *exactly as many times as you declare* — and proves it at compile time. No null pointer exceptions. No use-after-free. No silent data races. No GC overhead.
 
-The compiler checks that your resources (files, sockets, tokens) are used
-*exactly as many times as you say* — and proves it at compile time.
-No null pointer exceptions.  No use-after-free.  No silent data races.
+This repo is a **brand surface only**. The compiler, type checker, borrow checker, and codegen all live in link:https://github.com/hyperpolymath/affinescript[affinescript]. This repo carries:
 
-[source,python]
+* Examples idiomatic to Python developers
+* Documentation aimed at the Python community
+* A `rattle` shim CLI that aliases `affinescript --face rattle`
+* Tutorial and migration guides for moving Python code into a strongly-typed, affine-typed, WASM-targeting world
+
+== Hello
+
+`examples/hello.affine`:
+
+[source,affine]
 ----
-def greet(name: String) -> String:
-    "Hello, " + name + "!"
+# face: rattlescript
 
-def main() -> ():
-    let msg = greet("world")
-    IO.println(msg)
+effect IO:
+    fn println(s: String) -> ();
+
+def main() -{IO}-> ():
+    let greeting = "Hello, RattleScript!"
+    println(greeting)
 ----
 
-Save as `hello.rattle` and run:
+Same logical program, written in Python style. Compiles to the same canonical AST and the same typed-wasm output as every other face.
+
+== Install
 
 [source,bash]
 ----
-rattle eval hello.rattle
-----
-
-== Why Python syntax?
-
-Because Python programmers deserve a sound type system.
-
-RattleScript is Python's more dangerous cousin — same comfortable
-whitespace-delimited blocks, but with teeth: the compiler tracks *ownership*
-of every value so you cannot accidentally drop, duplicate, or outlive a
-resource.  You never null-check.  You never wonder if a function consumes its
-argument or borrows it.  The type says so.
-
-The mascot is a rattlesnake.
-
-== Surface mappings
-
-[cols="1,1"]
-|===
-|Python surface |What it means in RattleScript
-
-|`def f(x: T) -> R:` |function declaration
-|`True` / `False`    |`true` / `false`
-|`None`              |unit `()` — not null, genuinely nothing
-|`and` / `or` / `not` |`&&` / `\|\|` / `!`
-|`class Name:`       |`type Name` (algebraic data type)
-|`pass`              |`()` (unit expression)
-|`import a.b`        |`use a::b;`
-|`from a import b`   |`use a::b;`
-|`if cond:` / `else:` |`if cond { ... } else { ... }`
-|`elif cond:`        |`} else if cond {`
-|`for x in e:`       |`for x in e { ... }`
-|`match e:`          |`match e { ... }`
-|`# comment`         |`// comment`
-|===
-
-Run `rattle preview-python-transform <file>` to see the canonical
-AffineScript that the preprocessor generates from any `.rattle` file.
-
-== Getting started
-
-=== Prerequisites
-
-* https://ocaml.org/[OCaml] + https://dune.build/[dune] (for the compiler)
-* https://www.rust-lang.org/[Rust] + cargo (for the `rattle` wrapper)
-* https://just.systems/[just] (task runner)
-
-=== Install from source
-
-[source,bash]
-----
-git clone --recurse-submodules https://github.com/hyperpolymath/rattlescript
+opam install affinescript
+git clone https://github.com/hyperpolymath/rattlescript
 cd rattlescript
-
-# Build affinescript compiler + rattle wrapper in one step
-just bootstrap
-
-# Optional: install rattle to ~/.cargo/bin
-just install
 ----
 
-=== Usage
+The `affinescript` binary does the work. The `bin/rattle` shim in this repo just defaults the `--face` flag.
+
+== Use
 
 [source,bash]
 ----
-rattle check   hello.rattle      # type-check
-rattle eval    hello.rattle      # run
-rattle compile hello.rattle      # compile to WASM
-rattle fmt     hello.rattle      # format
-rattle lint    hello.rattle      # static analysis
+# Direct, via affinescript:
+affinescript eval --face rattle examples/hello.affine
+affinescript compile --face rattle examples/hello.affine -o hello.wasm
 
-# See what the Python preprocessor produces
-rattle preview-python-transform hello.rattle
+# Or via the rattle shim (same thing):
+./bin/rattle eval examples/hello.affine
+./bin/rattle compile examples/hello.affine -o hello.wasm
+
+# Or via the justfile:
+just run examples/hello.affine
+just preview examples/hello.affine    # show the canonical lowering
 ----
 
-`.rattle` files are detected automatically — no `--face` flag needed.
-You can also use `.pyaff` if you prefer the AffineScript naming.
+Source files use the canonical `.affine` extension. The face is selected by the `# face: rattlescript` pragma on the first comment line, or by the `--face rattle` flag.
 
-== Ownership in one minute
+== Different faces, same cube
 
-[source,python]
-----
-# @linear means: use this exactly once.
-def send_token(@linear token: AuthToken) -> Receipt:
-    network.submit(token)   # consumes token — compiler verifies this
+RattleScript is one of six established faces over the AffineScript core:
 
-# Option instead of None crashes.
-def safe_divide(a: Int, b: Int) -> Option[Int]:
-    if b == 0:
-        None
-    else:
-        Some(a / b)
+* AffineScript — the canonical face
+* **RattleScript** — Python-style (this repo)
+* link:https://github.com/hyperpolymath/jaffascript[JaffaScript] — JavaScript / TypeScript-style
+* link:https://github.com/hyperpolymath/lucidscript[LucidScript] — PureScript / Haskell-style
+* link:https://github.com/hyperpolymath/cafescripto[CafeScripto] — CoffeeScript-style
+* link:https://github.com/hyperpolymath/pseudoscript[PseudoScript] — pseudocode-style
 
-def show(result: Option[Int]) -> ():
-    match result:
-        Some(n) => IO.println(Int.to_string(n))
-        None    => IO.println("no result")
-----
+All six share the canonical `.affine` extension and lower to the same AST. Errors are reported in face-appropriate vocabulary.
 
-The compiler rejects any program that drops a `@linear` value unused,
-uses it more than once, or tries to treat `None` as a value.
+== Why RattleScript
 
-== Relationship to AffineScript
+Python is the most popular programming language and has the largest scientific / data / web community on Earth. It also has well-documented limits: dynamic typing, packaging hell, the GIL, performance ceiling for browser deployment, no ownership semantics. RattleScript is a Python-shaped on-ramp to a language that fixes those limits without making you learn an alien syntax first.
 
-RattleScript *is* AffineScript.  Same compiler, same type system, same WASM
-output.  The difference is `--face python` is the default and the entry
-point is `rattle` instead of `affinescript`.
+For a Python developer, the migration path looks like:
 
-The affinescript compiler lives in the `affinescript/` submodule of this
-repo.  `just update-affinescript` bumps the pointer to the latest upstream
-release — all language improvements flow through automatically.
+1. Rename your `.py` files to `.affine` and add `# face: rattlescript` at the top.
+2. Type-annotate your function signatures (Python's optional type hints become required, but you can usually copy them over).
+3. Add `let` to bare variable assignments.
+4. Replace `import a.b` with explicit imports.
+5. Compile to typed-wasm, ship to browsers / WASI runtimes / native via the same build.
 
-Face logic: `affinescript/lib/python_face.ml` (syntax transform) and
-`affinescript/lib/face.ml` (error vocabulary).  No compiler internals change
-when the face changes.
+== Status
 
-== Alpha caveats
-
-* **Effects runtime**: `effect`/`handle` syntax is type-checked but not yet
-  executed at runtime.  The effects story is coming in a near-upstream release.
-* **Closures and linear captures**: lambda-body linear capture tracking is
-  conservative in the current release.
-* **Span fidelity**: error locations refer to the transformed canonical source,
-  not the original `.rattle` line numbers.  Source-map remapping is planned.
-
-== Contributing
-
-This repo is a thin distribution layer.  Language bugs and features go
-upstream: https://github.com/hyperpolymath/affinescript[hyperpolymath/affinescript].
-
-RattleScript-specific contributions (branding, examples, tutorials, the
-`rattle` CLI wrapper) are welcome here.
+Alpha. The face transformer is implemented in `affinescript/lib/python_face.ml`. Known limitations are tracked in link:https://github.com/hyperpolymath/affinescript/blob/main/examples/faces/README.adoc[the affinescript faces README] under "Known transformer gaps".
 
 == License
 
-PMPL-1.0-or-later.  See link:LICENSE[LICENSE].
+AGPL-3.0-or-later. See `LICENSE`.

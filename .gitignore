@@ -104,3 +104,7 @@ sync_report*.txt
 # Hypatia scan cache (local-only)
 .hypatia/
 .zig-cache/
+
+# Allow the brand shim binary (a shell script, not a compiled artefact)
+!bin/
+!bin/*

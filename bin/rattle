@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-FileCopyrightText: 2024-2026 Jonathan D.A. Jewell (hyperpolymath)
+#
+# rattle — RattleScript shim. Forwards arguments to the affinescript CLI
+# with --face rattle injected right after the subcommand. Source files
+# should still use the canonical .affine extension and a face: rattlescript
+# pragma; this shim only saves typing the --face flag for routine use.
+
+if [ $# -eq 0 ]; then
+  exec affinescript
+fi
+subcmd="$1"
+shift
+exec affinescript "$subcmd" --face rattle "$@"
