@@ -1,5 +1,5 @@
 # Proof Requirements — {{PROJECT}}
-<!-- SPDX-License-Identifier: PMPL-1.0-or-later -->
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!-- Template: rsr-template-repo/PROOF-NEEDS.md -->
 <!-- Authoritative master list: ~/Desktop/PROOF-REQUIREMENTS-MASTER.md -->
 
