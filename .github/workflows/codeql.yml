@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0
+# SPDX-License-Identifier: MPL-2.0
 name: CodeQL Security Analysis
 
 on:
@@ -23,6 +23,7 @@ permissions:
 jobs:
   analyze:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       security-events: write
@@ -30,11 +31,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Repo has no JS/TS source — `javascript-typescript` matrix
-          # produced "no source files" failures on every CodeQL run.
-          # Switch to `actions` extractor (scans workflow files which
-          # every repo has). Per hypatia rule `codeql_language_matrix_mismatch`.
-          - language: actions
+          - language: javascript-typescript
             build-mode: none
 
     steps:
