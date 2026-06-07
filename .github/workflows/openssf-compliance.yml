@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # OpenSSF Best Practices compliance gate — blocks PRs and pushes that lack
 # required files or still contain unfilled placeholder tokens.
 name: OpenSSF Compliance
@@ -16,6 +16,7 @@ permissions:
 jobs:
   openssf-compliance:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:
