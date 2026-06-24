@@ -1,12 +1,12 @@
 #!/bin/sh
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # setup.sh — Universal setup script for rsr-template-repo
 #
 # Detects your shell, platform, and installs prerequisites.
 # Then hands off to `just setup` for project-specific configuration.
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/hyperpolymath/rsr-template-repo/main/setup.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/hyperpolymath/rsr-template-repo/main/setup.sh -o setup.sh && sh setup.sh   # review before running
 #   # or after cloning:
 #   ./setup.sh
 #
@@ -141,7 +141,7 @@ install_just() {
         dnf)        sudo dnf install -y just ;;
         apt)        sudo apt-get install -y just 2>/dev/null || {
                         # just not in older apt repos — use installer
-                        curl -fsSL https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+                        curl -fsSL https://just.systems/install.sh -o /tmp/just-install.sh && bash /tmp/just-install.sh --to /usr/local/bin
                     } ;;
         pacman)     sudo pacman -S --noconfirm just ;;
         apk)        sudo apk add just ;;
@@ -153,7 +153,7 @@ install_just() {
         nix)        nix-env -iA nixpkgs.just ;;
         *)
             info "Using just installer script..."
-            curl -fsSL https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+            curl -fsSL https://just.systems/install.sh -o /tmp/just-install.sh && bash /tmp/just-install.sh --to /usr/local/bin
             ;;
     esac
 
@@ -252,7 +252,7 @@ main() {
     # Write report
     REPORT_FILE="INSTALL-SECURITY-REPORT.adoc"
     {
-        printf "// SPDX-License-Identifier: PMPL-1.0-or-later\n"
+        printf "// SPDX-License-Identifier: MPL-2.0\n"
         printf "= Install Security Report\n"
         printf ":date: %s\n\n" "$(date -Iseconds 2>/dev/null || date)"
         printf "== Platform\n"

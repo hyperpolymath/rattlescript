@@ -1,20 +1,20 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
 # STATE.a2ml — Project state checkpoint (META-TEMPLATE)
 #
-# This is the STATE file for rattlescript.
+# This is the STATE file for rsr-template-repo itself.
 # When consumed by a new project, replace {{PLACEHOLDER}} tokens
 # and customize sections below for the target project.
 
 [metadata]
-project = "rattlescript"
+project = "rsr-template-repo"
 version = "0.2.0"
 last-updated = "2026-02-28"
 status = "active"  # active | paused | archived
 
 [project-context]
-name = "rattlescript"
+name = "rsr-template-repo"
 purpose = "Canonical RSR-compliant repository template providing scaffolding for all hyperpolymath projects — including CI/CD, AI manifests, ABI/FFI standards, container ecosystem, and governance infrastructure."
 completion-percentage = 95
 

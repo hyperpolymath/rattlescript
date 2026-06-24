@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Post-audit Status Report: rattlescript
 - **Date:** 2026-04-15
 - **Status:** Complete (M5 Sweep)
@@ -10,10 +14,10 @@
 4. Static Analysis: Verified with `panic-attack assail`.
 
 ## Findings Summary
-- 14 TODO/FIXME/HACK markers in .machine_readable/contractiles/k9/template-hunt.k9.ncl
+- 14 TODO/FIXME/HACK markers in .machine_readable/contractiles/self-validating/template-hunt.k9.ncl
 - flake.nix declares inputs without narHash, rev pinning, or sibling flake.lock — dependency revision is unpinned in flake.nix
 - Hardcoded /tmp/ path without mktemp in tests/e2e.sh
-- 14 TODO/FIXME/HACK markers in affinescript/contractiles/k9/template-hunt.k9.ncl
+- 14 TODO/FIXME/HACK markers in affinescript/contractiles/self-validating/template-hunt.k9.ncl
 - DOM manipulation (innerHTML/document.write) in affinescript/tools/affine-doc/assets/search.js
 - 18 TODO/FIXME/HACK markers in affinescript/tools/affine-pkg/src/main.rs
 - 9 unwrap/expect calls in affinescript/tools/affinescript-lsp/src/handlers.rs

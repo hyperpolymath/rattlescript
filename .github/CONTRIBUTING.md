@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Clone the repository
 git clone https://github.com/hyperpolymath/rattlescript.git
 cd rattlescript
@@ -32,7 +36,7 @@ rattlescript/
 ├── .machine_readable/   # ALL machine-readable content (Perimeter 1)
 │   ├── *.a2ml           # State files (STATE, META, ECOSYSTEM, etc.)
 │   ├── bot_directives/  # Bot configs
-│   └── contractiles/    # Policy contracts (k9, dust, lust, must, trust)
+│   └── contractiles/    # Policy contracts (k9, dust, intend, must, trust)
 ├── .well-known/         # Protocol files (Perimeter 1-3)
 ├── .github/             # GitHub config (Perimeter 1)
 │   ├── ISSUE_TEMPLATE/
