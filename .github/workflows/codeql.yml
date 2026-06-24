@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: MPL-2.0
 name: CodeQL Security Analysis
-
 on:
   push:
     branches: [main, master]
@@ -16,10 +15,8 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
 permissions:
   contents: read
-
 jobs:
   analyze:
     runs-on: ubuntu-latest
@@ -33,7 +30,6 @@ jobs:
         include:
           - language: actions
             build-mode: none
-
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -43,7 +39,6 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
-
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v3
         with:
