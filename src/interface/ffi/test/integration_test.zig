@@ -1,6 +1,6 @@
-// RSR Template FFI Integration Tests
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+// RSR Template FFI Integration Tests
 //
 // These tests verify that the Zig FFI correctly implements the Idris2 ABI.
 // This is a TEMPLATE FILE — when instantiating a new project:

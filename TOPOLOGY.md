@@ -1,4 +1,7 @@
-<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!--
+SPDX-License-Identifier: AGPL-3.0-or-later
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 <!-- Last updated: 2026-04-04 -->
 
 # Architecture Topology

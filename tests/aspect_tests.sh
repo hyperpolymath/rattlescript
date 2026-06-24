@@ -68,7 +68,7 @@ fi
 bold "Aspect 2: Dangerous patterns"
 
 # Idris2 dangerous patterns
-DANGEROUS_IDRIS=$(grep -rn 'believe_me\|assert_total\|really_believe_me' src/abi/ 2>/dev/null | grep -v "^Binary" | grep -v "test" || true)
+DANGEROUS_IDRIS=$(grep -rn 'believe_me\|assert_total\|really_believe_me' src/interface/Abi/ 2>/dev/null | grep -v "^Binary" | grep -v "test" || true)
 if [ -n "$DANGEROUS_IDRIS" ]; then
     fail "Dangerous Idris2 patterns found:"
     echo "$DANGEROUS_IDRIS" | head -5
@@ -93,7 +93,7 @@ fi
 # bold "Aspect 3: ABI/FFI contract"
 # if [ -d "src/abi" ] && [ -d "ffi/zig" ]; then
 #     # Check that every exported function in Idris2 ABI has a Zig FFI implementation
-#     ABI_EXPORTS=$(grep -h 'export' src/abi/*.idr 2>/dev/null | wc -l)
+#     ABI_EXPORTS=$(grep -h 'export' src/interface/Abi/*.idr 2>/dev/null | wc -l)
 #     FFI_EXPORTS=$(grep -h 'pub export fn' ffi/zig/src/*.zig 2>/dev/null | wc -l)
 #     if [ "$ABI_EXPORTS" -gt 0 ] && [ "$FFI_EXPORTS" -gt 0 ]; then
 #         pass "ABI ($ABI_EXPORTS exports) and FFI ($FFI_EXPORTS exports) both present"

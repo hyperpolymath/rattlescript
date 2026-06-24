@@ -1,5 +1,5 @@
 -- SPDX-License-Identifier: AGPL-3.0-or-later
--- Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath)
+-- Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 --
 -- Typing Proof: Core data type well-formedness
 -- Template — replace with your project's core types.

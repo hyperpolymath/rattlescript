@@ -1,9 +1,10 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 // {{PROJECT}} FFI Implementation
 //
-// This module implements the C-compatible FFI declared in src/abi/Foreign.idr
+// This module implements the C-compatible FFI declared in src/interface/Abi/Foreign.idr
 // All types and layouts must match the Idris2 ABI definitions.
 //
-// SPDX-License-Identifier: AGPL-3.0-or-later
 
 const std = @import("std");
 
@@ -25,7 +26,7 @@ fn clearError() void {
 }
 
 //==============================================================================
-// Core Types (must match src/abi/Types.idr)
+// Core Types (must match src/interface/Abi/Types.idr)
 //==============================================================================
 
 /// Result codes (must match Idris2 Result type)

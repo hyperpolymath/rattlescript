@@ -1,5 +1,7 @@
-<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
-
+<!--
+SPDX-License-Identifier: AGPL-3.0-or-later
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Project Governance
 
 This document describes the governance model for **{{PROJECT_NAME}}**.

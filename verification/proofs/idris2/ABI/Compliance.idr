@@ -1,5 +1,5 @@
 -- SPDX-License-Identifier: AGPL-3.0-or-later
--- Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath)
+-- Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 --
 -- ABI Proof: C ABI compliance
 -- Proves that struct layouts are C ABI compliant.
