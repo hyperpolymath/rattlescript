@@ -1,0 +1,6 @@
+# AffineScript canonical pin — the compiler commit this face is validated against.
+# Version-lock per docs/specs/FACE-CONTRACT.adoc (hyperpolymath/affinescript).
+# Update deliberately (after re-running the face conformance gate), not casually.
+repo = https://github.com/hyperpolymath/affinescript.git
+commit = 4b36de2fad7bc18408aec9b71c6c3acf1afe8d09
+face = rattle
