@@ -2,14 +2,60 @@
 # SPDX-License-Identifier: MPL-2.0
 # SPDX-FileCopyrightText: 2024-2026 Jonathan D.A. Jewell (hyperpolymath)
 #
-# rattle — RattleScript shim. Forwards arguments to the affinescript CLI
-# with --face rattle injected right after the subcommand. Source files
-# should still use the canonical .affine extension and a face: rattlescript
-# pragma; this shim only saves typing the --face flag for routine use.
+# rattle — RattleScript shim (brand surface only; carries no compiler).
+#
+# Locates the canonical `affinescript` compiler and injects `--face rattle`.
+# Source files use the canonical `.affine` extension plus a `face: rattlescript`
+# pragma; this shim only saves typing the flag. Discovery order and the binding
+# contract are normative in docs/specs/FACE-CONTRACT.adoc (hyperpolymath/affinescript).
+set -euo pipefail
+FACE="rattle"
+BRAND="RattleScript"
+
+# Resolve this script's own directory (follow symlinks) for sibling discovery.
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [ "${SOURCE#/}" = "$SOURCE" ] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+
+find_affinescript() {
+  # 1. explicit override
+  if [ -n "${AFFINESCRIPT:-}" ] && [ -x "${AFFINESCRIPT:-}" ]; then
+    printf '%s' "$AFFINESCRIPT"; return 0
+  fi
+  # 2. on PATH (e.g. `opam install affinescript`)
+  if command -v affinescript >/dev/null 2>&1; then
+    printf '%s' affinescript; return 0
+  fi
+  # 3. a sibling canonical checkout, built (`dune build`)
+  local c
+  for c in \
+    "$SCRIPT_DIR/../../γ-affinescript/affinescript/_build/default/bin/main.exe" \
+    "$SCRIPT_DIR/../../../γ-affinescript/affinescript/_build/default/bin/main.exe" \
+    "$SCRIPT_DIR/../affinescript/_build/default/bin/main.exe" \
+    "$HOME/developer/repos/γ-affinescript/affinescript/_build/default/bin/main.exe"; do
+    if [ -x "$c" ]; then printf '%s' "$c"; return 0; fi
+  done
+  return 1
+}
+
+if ! AS="$(find_affinescript)"; then
+  cat >&2 <<MSG
+error: the canonical \`affinescript\` compiler was not found.
+$BRAND is a brand surface only — it needs the compiler installed. Try one of:
+  • opam install affinescript          (then re-run)
+  • export AFFINESCRIPT=/path/to/affinescript
+  • build a sibling checkout: (in γ-affinescript/affinescript) dune build
+See docs/specs/FACE-CONTRACT.adoc in hyperpolymath/affinescript.
+MSG
+  exit 127
+fi
 
 if [ $# -eq 0 ]; then
-  exec affinescript
+  exec "$AS"
 fi
-subcmd="$1"
-shift
-exec affinescript "$subcmd" --face rattle "$@"
+subcmd="$1"; shift
+exec "$AS" "$subcmd" --face "$FACE" "$@"
