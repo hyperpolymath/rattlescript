@@ -1,0 +1,55 @@
+== Contributing to rattleScript
+
+This is a *brand-surface repo*. The compiler, type checker, borrow
+checker, codegen, and face transformer all live in
+https://github.com/hyperpolymath/affinescript[affinescript].
+
+=== Where to file what
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Issue |Repo
+|The face transformer mangles my code
+|https://github.com/hyperpolymath/affinescript/issues[affinescript]
+
+|The error message uses the wrong vocabulary for this face
+|https://github.com/hyperpolymath/affinescript/issues[affinescript] —
+the face vocabulary lives in `+lib/face.ml+`
+
+|New language feature needed (extern types, dependent types, etc.)
+|https://github.com/hyperpolymath/affinescript/issues[affinescript]
+
+|Brand README is unclear / wrong |this repo
+
+|Example program doesn’t compile |this repo (and probably also
+affinescript if it’s a transformer bug)
+
+|Tutorial / migration guide additions |this repo
+
+|Add this face to my IDE / build tool |this repo, but expect it to
+depend on affinescript work first
+|===
+
+=== Local workflow
+
+[source,bash]
+----
+opam install affinescript     # installs the compiler
+git clone https://github.com/hyperpolymath/rattlescript
+cd rattlescript
+just hello                    # smoke-test the example
+just check examples/hello.affine
+just preview examples/hello.affine
+----
+
+=== Pull requests
+
+* SPDX header on every new file (`+AGPL-3.0-or-later+`).
+* Run `+just hello+` and any other examples added before opening the PR.
+* If you’re touching the face transformer, open the PR against
+https://github.com/hyperpolymath/affinescript[affinescript], not here.
+
+=== Code of conduct
+
+See `+CODE_OF_CONDUCT.md+` (TBD; for now follow the affinescript code of
+conduct).
