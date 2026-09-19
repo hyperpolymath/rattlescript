@@ -7,13 +7,13 @@
 # applied by the probot/settings app when changes are pushed to the default
 # branch. Install the app at: https://github.com/apps/settings
 #
-# Template file — replace rattlescript and {{DESCRIPTION}} with actual values.
+# Template file — replace rattlescript and Python-syntax AffineScript — write Python-style code, get affine resource guarantees and typed WASM with actual values.
 
 # ─── Repository Settings ───────────────────────────────────────────────────────
 
 repository:
   name: "rattlescript"
-  description: "{{DESCRIPTION}}"
+  description: "Python-syntax AffineScript — write Python-style code, get affine resource guarantees and typed WASM"
   homepage: "https://github.com/hyperpolymath/rattlescript"
   private: false
   has_issues: true
