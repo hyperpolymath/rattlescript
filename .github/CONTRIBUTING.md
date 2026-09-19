@@ -39,11 +39,11 @@ rattlescript/
 │   └── contractiles/    # Policy contracts (k9, dust, intend, must, trust)
 ├── .well-known/         # Protocol files (Perimeter 1-3)
 ├── .github/             # GitHub config (Perimeter 1)
+│   ├── CONTRIBUTING.md  # This file
 │   ├── ISSUE_TEMPLATE/
 │   └── workflows/
 ├── CHANGELOG.md
 ├── CODE_OF_CONDUCT.md
-├── CONTRIBUTING.md      # This file
 ├── GOVERNANCE.md
 ├── LICENSE
 ├── MAINTAINERS.md
